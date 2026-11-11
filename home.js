@@ -1,10 +1,11 @@
 import { api } from "./api.js";
-import { initLayout, itemCard, skeletonCards, swingTag, fmt, qs } from "./ui.js";
+import { initLayout, itemCard, skeletonCards, swingTag, fmt, qs, QR_ICON } from "./ui.js";
 
 initLayout();
+qs("[data-qr]").outerHTML = QR_ICON;
 
 // marquee — duplicated once for a seamless loop
-const words = ["Less new. More you.", "Curated secondhand", "Free for HKBU", "Hygiene-checked", "Every piece, a passport"];
+const words = ["Curated secondhand", "Less new. More you.", "Digital passports", "No greenwashing", "Circular by design"];
 const run = words.map(w => `<span>${w}</span><i>✺</i>`).join("");
 qs("#marquee").innerHTML = run + run;
 
@@ -23,7 +24,7 @@ latest.innerHTML = skeletonCards(3);
     const feat = items[0];
     const tagData = feat
       ? { ...feat, href: `item.html?id=${encodeURIComponent(feat.id)}` }
-      : { passportId: "TF-2026-HKBU-0001", title: "Your piece, next", size: "Any", campus: "HKBU", href: "donate.html" };
+      : { passportId: "TF-2026-000001", title: "Your piece, next", size: "Any", href: "donate.html" };
     qs("#passportTag").innerHTML = swingTag(feat ? { ...feat, href: `passport.html?id=${encodeURIComponent(feat.passportId)}` } : tagData);
   } catch (e) {
     latest.innerHTML = `<div class="empty"><h3>Couldn't load the rack.</h3><p>${e.message}</p></div>`;

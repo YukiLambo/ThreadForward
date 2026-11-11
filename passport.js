@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { initLayout, esc, catLabel, condLabel, fmt, qs, param, toast } from "./ui.js";
+import { initLayout, esc, catLabel, condLabel, fmt, qs, param, toast, priceLabel, openScanner } from "./ui.js";
 
 initLayout();
 
@@ -18,13 +18,14 @@ function render(l) {
   <article class="passport">
     <div class="passport__qr"><img src="${qr}" alt="QR code for passport ${esc(l.passportId)}"></div>
     <div class="passport__body">
-      <span class="badge">Hygiene-checked</span>
+      <span class="badge">Hygiene-checked · Tagged</span>
       <p class="mono" style="margin:14px 0 0">${esc(l.passportId)}</p>
       <h2>${esc(l.title)}</h2>
       <dl class="specs" style="margin:0 0 18px">
         <dt>Type</dt><dd>${esc(catLabel(l.category))}, size ${esc(l.size)}</dd>
         <dt>Condition</dt><dd>${esc(condLabel(l.condition))}</dd>
-        <dt>Home campus</dt><dd>${esc(l.campus)}</dd>
+        <dt>Pick-up</dt><dd>${esc(l.hub)}</dd>
+        <dt>Price</dt><dd>${esc(priceLabel(l))}</dd>
         ${l.donorDisplay ? `<dt>Previous owner</dt><dd>${esc(l.donorDisplay)}</dd>` : ""}
         <dt>Status</dt><dd>${esc(status)}</dd>
         <dt>Water saved</dt><dd>~${fmt(l.impact?.waterL || 0)} L (est.)</dd>
@@ -60,44 +61,7 @@ qs("#sample")?.addEventListener("click", async () => {
   else toast("No passports exist yet.", true);
 });
 
-// ── camera scanning (BarcodeDetector where available) ──
-let stream, raf;
-qs("#scanBtn").addEventListener("click", async () => {
-  if (!("BarcodeDetector" in window)) {
-    return toast("Camera scanning isn't supported in this browser. Use your phone's camera app on the QR, or type the ID.", true);
-  }
-  try {
-    const detector = new window.BarcodeDetector({ formats: ["qr_code"] });
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-    const video = qs("#video");
-    video.srcObject = stream;
-    await video.play();
-    qs("#scanBox").hidden = false;
-    const tick = async () => {
-      try {
-        const codes = await detector.detect(video);
-        if (codes.length) {
-          const raw = codes[0].rawValue;
-          let pid = raw;
-          try { pid = new URL(raw).searchParams.get("id") || raw; } catch { /* plain ID */ }
-          stopScan();
-          qs("#pid").value = pid;
-          return lookup(pid);
-        }
-      } catch { /* keep scanning */ }
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-  } catch (e) {
-    toast("Camera access was blocked. Allow camera access, or type the ID.", true);
-  }
-});
-function stopScan() {
-  cancelAnimationFrame(raf);
-  stream?.getTracks().forEach(t => t.stop());
-  qs("#scanBox").hidden = true;
-}
-qs("#stopScan").addEventListener("click", stopScan);
+qs("#scanBtn").addEventListener("click", openScanner);
 
 const initial = param("id");
 if (initial) { qs("#pid").value = initial; lookup(initial); }

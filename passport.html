@@ -15,20 +15,15 @@
   <section class="section">
     <div class="wrap split">
       <div>
-        <p class="kicker">Garment passport</p>
+        <p class="kicker">Digital garment passport</p>
         <h1 class="display display--xl">Every piece<br>has a <span class="serif">past.</span></h1>
-        <p class="lede" style="margin-top:24px">Scan the QR on a ThreadForward tag, or type its passport ID, to see where it's been and the impact of wearing it again.</p>
-
-        <form class="signup" id="lookup" style="margin-top:32px">
+        <p class="lede" style="margin-top:24px">Every piece we collect wears a ThreadForward tag. Scan its QR code, or type the ID printed on it, and the piece's whole record opens up.</p>
+        <p style="margin-top:32px"><button class="btn btn--ink" id="scanBtn" type="button">Scan a tag with your camera</button></p>
+        <form class="signup" id="lookup" style="margin-top:28px">
           <label class="sr-only" for="pid">Passport ID</label>
-          <input id="pid" placeholder="TF-2026-HKBU-0842" autocomplete="off" spellcheck="false" style="font-family:var(--f-mono);text-transform:uppercase">
-          <button type="submit">Look up</button>
+          <input id="pid" placeholder="Or type the ID: TF-2026-RC0842" autocomplete="off" spellcheck="false" style="font-family:var(--f-mono);text-transform:uppercase">
+          <button type="submit" aria-label="Look up passport">→</button>
         </form>
-        <p style="margin-top:18px"><button class="btn btn--sm" id="scanBtn" type="button">Scan with camera</button></p>
-        <div id="scanBox" hidden style="margin-top:18px">
-          <div class="scanner"><video id="video" playsinline muted></video><div class="scanner__line"></div></div>
-          <p class="muted" style="font-size:.9rem;margin-top:10px">Point your camera at the QR code. <button class="link" id="stopScan" type="button" style="background:none;border:0;cursor:pointer;padding:0">Stop</button></p>
-        </div>
       </div>
       <div id="result" aria-live="polite">
         <div class="empty"><h3>No passport open</h3><p>Try <button class="link" id="sample" type="button" style="background:none;border:0;cursor:pointer;padding:0;font:inherit">a sample passport</button>.</p></div>

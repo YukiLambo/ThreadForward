@@ -18,11 +18,11 @@ import { firebaseConfig, FIREBASE_SDK, IMPACT } from "./config.js";
 export const MODE = firebaseConfig.apiKey ? "firebase" : "demo";
 
 // ── shared helpers ───────────────────────────────────────────
-export function makePassportId(campus = "HKBU") {
+export function makePassportId() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let s = "";
-  for (let i = 0; i < 4; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return `TF-${new Date().getFullYear()}-${campus.toUpperCase().slice(0, 5)}-${s}`;
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return `TF-${new Date().getFullYear()}-${s}`;
 }
 
 export function impactFor(category) {
@@ -71,7 +71,8 @@ function publicListingFrom(sub) {
     description: sub.description || "",
     story: sub.story || "",
     photos: sub.photos || [],
-    campus: sub.campus,
+    hub: sub.hub,
+    price: Math.max(0, Number(sub.price) || 0),
     donorDisplay: sub.showDonorName && first ? first : "",
     impact: impactFor(sub.category),
     status: "available"
@@ -81,12 +82,12 @@ function publicListingFrom(sub) {
 // ═════════════════════════════════════════════════════════════
 //  DEMO BACKEND (localStorage) — used until Firebase is configured
 // ═════════════════════════════════════════════════════════════
-const DEMO_KEY = "tf_demo_v4";
+const DEMO_KEY = "tf_demo_v5";
 const SEED = [
-  { id: "seed-1", passportId: "TF-2026-HKBU-0842", title: "Rust corduroy blazer", category: "outerwear", size: "M", condition: "great", material: "Cotton corduroy", brand: "Vintage, unbranded", description: "Oversized, soft wale, sits beautifully over a printed shirt. Light wear on the cuffs.", story: "Found at a Sham Shui Po stall, worn to every gallery opening.", photos: ["look-01.jpg"], campus: "HKBU", donorDisplay: "Alex", status: "available" },
-  { id: "seed-2", passportId: "TF-2026-POLYU-0193", title: "Mesh tee with organza sleeves", category: "tops", size: "S", condition: "like-new", material: "Polyester mesh, organza", brand: "", description: "A statement layer. Worn once to a showcase.", story: "", photos: ["look-02.jpg"], campus: "PolyU", donorDisplay: "", status: "available" },
-  { id: "seed-3", passportId: "TF-2026-CITYU-0411", title: "Everyday shirt bundle", category: "shirts", size: "L", condition: "good", material: "Cotton, linen", brand: "Mixed", description: "Five easy shirts in warm tones. Take one or take them all.", story: "", photos: ["look-03.jpg"], campus: "CityU", donorDisplay: "", status: "available" },
-  { id: "seed-4", passportId: "TF-2026-HKBU-0107", title: "Paisley wide-leg jeans", category: "denim", size: "M", condition: "great", material: "Cotton denim", brand: "", description: "Relaxed fit with an all-over paisley print.", story: "First piece ever rehomed through ThreadForward.", photos: ["hero.jpg"], campus: "HKBU", donorDisplay: "Sam", status: "claimed" }
+  { id: "seed-1", passportId: "TF-2026-RC0842", title: "Rust corduroy blazer", category: "outerwear", size: "M", condition: "great", material: "Cotton corduroy", brand: "Vintage, unbranded", description: "Oversized, soft wale, sits beautifully over a printed shirt. Light wear on the cuffs.", story: "Found at a Sham Shui Po stall, worn to every gallery opening.", photos: ["look-01.jpg"], hub: "Hong Kong Hub", price: 180, donorDisplay: "Alex", status: "available" },
+  { id: "seed-2", passportId: "TF-2026-MO0193", title: "Mesh tee with organza sleeves", category: "tops", size: "S", condition: "like-new", material: "Polyester mesh, organza", brand: "", description: "A statement layer. Worn once to a showcase.", story: "", photos: ["look-02.jpg"], hub: "Pop-up Booth", price: 120, donorDisplay: "", status: "available" },
+  { id: "seed-3", passportId: "TF-2026-ES0411", title: "Everyday shirt bundle", category: "shirts", size: "L", condition: "good", material: "Cotton, linen", brand: "Mixed", description: "Five easy shirts in warm tones. Take one or take them all.", story: "", photos: ["look-03.jpg"], hub: "Hong Kong Hub", price: 60, donorDisplay: "", status: "available" },
+  { id: "seed-4", passportId: "TF-2026-PW0107", title: "Paisley wide-leg jeans", category: "denim", size: "M", condition: "great", material: "Cotton denim", brand: "", description: "Relaxed fit with an all-over paisley print.", story: "First piece ever rehomed through ThreadForward.", photos: ["hero.jpg"], hub: "Hong Kong Hub", price: 150, donorDisplay: "Sam", status: "claimed" }
 ].map(x => ({ ...x, impact: impactFor(x.category), approvedAt: Date.now() - 86400000 }));
 
 function dLoad() {
@@ -95,7 +96,7 @@ function dLoad() {
     if (raw) return JSON.parse(raw);
   } catch (e) { /* ignore */ }
   const fresh = { submissions: [], listings: SEED, requests: [], subscribers: [], registrations: [] };
-  dSave(fresh);
+  try { dSave(fresh); } catch { /* storage blocked: run in memory */ }
   return fresh;
 }
 function dSave(db) {
@@ -114,18 +115,18 @@ const demo = {
       onProgress((i + 1) / files.length);
     }
     const db = dLoad();
-    const sub = { ...data, id: uid(), passportId: makePassportId(data.campus), photos, status: "pending", createdAt: Date.now() };
+    const sub = { ...data, id: uid(), passportId: makePassportId(), photos, status: "pending", createdAt: Date.now() };
     db.submissions.unshift(sub);
     dSave(db);
     await wait(300);
     return { id: sub.id, passportId: sub.passportId };
   },
-  async listListings({ category, size, campus, includeClaimed = false, limit } = {}) {
+  async listListings({ category, size, hub, includeClaimed = false, limit } = {}) {
     let items = dLoad().listings;
     if (!includeClaimed) items = items.filter(i => i.status !== "claimed");
     if (category) items = items.filter(i => i.category === category);
     if (size) items = items.filter(i => i.size === size);
-    if (campus) items = items.filter(i => i.campus === campus);
+    if (hub) items = items.filter(i => i.hub === hub);
     items = items.sort((a, b) => (b.approvedAt || 0) - (a.approvedAt || 0));
     return limit ? items.slice(0, limit) : items;
   },
@@ -174,13 +175,33 @@ const demo = {
     const s = dLoad().submissions;
     return status ? s.filter(x => x.status === status) : s;
   },
-  async reviewSubmission(id, { decision, checklist, notes }) {
+  async reviewSubmission(id, { decision, checklist, notes, price }) {
     const db = dLoad();
     const sub = db.submissions.find(s => s.id === id);
     if (!sub) throw new Error("Submission not found");
+    if (price != null) sub.price = price;
     sub.status = decision; sub.checklist = checklist; sub.reviewNotes = notes; sub.reviewedAt = Date.now();
     if (decision === "approved") db.listings.unshift({ ...publicListingFrom(sub), id, approvedAt: Date.now() });
     dSave(db);
+  },
+  async addListing(data, files, onProgress = () => {}) {
+    const photos = [];
+    for (let i = 0; i < files.length; i++) {
+      photos.push(await blobToDataURL(await compressImage(files[i], 800, 0.74)));
+      onProgress((i + 1) / files.length);
+    }
+    const db = dLoad();
+    const id = uid(), passportId = makePassportId();
+    db.listings.unshift({ ...publicListingFrom({ ...data, passportId, photos }), id, approvedAt: Date.now(), addedByTeam: true });
+    dSave(db);
+    return { id, passportId };
+  },
+  async updateListing(id, fields) {
+    const db = dLoad(); const l = db.listings.find(x => x.id === id);
+    if (l) { Object.assign(l, fields); dSave(db); }
+  },
+  async removeListing(id) {
+    const db = dLoad(); db.listings = db.listings.filter(x => x.id !== id); dSave(db);
   },
   async listRequests() { return dLoad().requests; },
   async listRegistrations() { return dLoad().registrations; },
@@ -227,7 +248,7 @@ const firebase = {
     const user = await ensureUser();
     const { F, S, db, st } = await fb();
     const ref = F.doc(F.collection(db, "submissions"));
-    const passportId = makePassportId(data.campus);
+    const passportId = makePassportId();
     const photos = [];
     for (let i = 0; i < files.length; i++) {
       const blob = await compressImage(files[i]);
@@ -239,7 +260,7 @@ const firebase = {
     await F.setDoc(ref, { ...data, passportId, photos, status: "pending", ownerUid: user.uid, createdAt: F.serverTimestamp() });
     return { id: ref.id, passportId };
   },
-  async listListings({ category, size, campus, includeClaimed = false, limit } = {}) {
+  async listListings({ category, size, hub, includeClaimed = false, limit } = {}) {
     const { F, db } = await fb();
     const q = F.query(F.collection(db, "listings"), F.orderBy("approvedAt", "desc"), F.limit(200));
     let items = snapList(await F.getDocs(q)).map(i => ({ ...i, approvedAt: ts(i.approvedAt) }));
@@ -247,7 +268,7 @@ const firebase = {
     if (!includeClaimed) items = items.filter(i => i.status !== "claimed");
     if (category) items = items.filter(i => i.category === category);
     if (size) items = items.filter(i => i.size === size);
-    if (campus) items = items.filter(i => i.campus === campus);
+    if (hub) items = items.filter(i => i.hub === hub);
     return limit ? items.slice(0, limit) : items;
   },
   async getListing(id) {
@@ -314,15 +335,37 @@ const firebase = {
     const q = status ? F.query(base, F.where("status", "==", status)) : F.query(base, F.orderBy("createdAt", "desc"), F.limit(200));
     return snapList(await F.getDocs(q)).map(s => ({ ...s, createdAt: ts(s.createdAt) })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   },
-  async reviewSubmission(id, { decision, checklist, notes }) {
+  async reviewSubmission(id, { decision, checklist, notes, price }) {
     const { F, db, auth } = await fb();
     const sRef = F.doc(db, "submissions", id);
     const snap = await F.getDoc(sRef);
     if (!snap.exists()) throw new Error("Submission not found");
     const b = F.writeBatch(db);
     b.update(sRef, { status: decision, checklist, reviewNotes: notes, reviewedAt: F.serverTimestamp(), reviewedBy: auth.currentUser.uid });
-    if (decision === "approved") b.set(F.doc(db, "listings", id), { ...publicListingFrom(snap.data()), approvedAt: F.serverTimestamp() });
+    if (decision === "approved") b.set(F.doc(db, "listings", id), { ...publicListingFrom({ ...snap.data(), price }), approvedAt: F.serverTimestamp() });
     await b.commit();
+  },
+  async addListing(data, files, onProgress = () => {}) {
+    const { F, S, db, st } = await fb();
+    const ref = F.doc(F.collection(db, "listings"));
+    const passportId = makePassportId();
+    const photos = [];
+    for (let i = 0; i < files.length; i++) {
+      const r = S.ref(st, `listings/${ref.id}/${i}.jpg`);
+      await S.uploadBytes(r, await compressImage(files[i]), { contentType: "image/jpeg" });
+      photos.push(await S.getDownloadURL(r));
+      onProgress((i + 1) / files.length);
+    }
+    await F.setDoc(ref, { ...publicListingFrom({ ...data, passportId, photos }), approvedAt: F.serverTimestamp(), addedByTeam: true });
+    return { id: ref.id, passportId };
+  },
+  async updateListing(id, fields) {
+    const { F, db } = await fb();
+    await F.updateDoc(F.doc(db, "listings", id), fields);
+  },
+  async removeListing(id) {
+    const { F, db } = await fb();
+    await F.deleteDoc(F.doc(db, "listings", id));
   },
   async listRequests() {
     const { F, db } = await fb();

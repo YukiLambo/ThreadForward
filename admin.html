@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23DFF75B'/><text x='50' y='70' font-size='60' text-anchor='middle' font-family='Arial Black'>T</text></svg>">
   <meta name="robots" content="noindex">
-  <title>Review desk — ThreadForward</title>
+  <title>Team desk — ThreadForward</title>
 </head>
 <body>
 <main>
@@ -18,7 +18,7 @@
       <div class="section-head">
         <div>
           <p class="kicker">Team only</p>
-          <h1 class="display display--l">Review desk</h1>
+          <h1 class="display display--l">Team desk</h1>
         </div>
         <div id="who"></div>
       </div>
@@ -37,7 +37,9 @@
 
       <div id="desk" hidden>
         <div class="tabs" role="tablist">
-          <button class="chip" data-tab="pending" aria-pressed="true">To review <span id="nPending"></span></button>
+          <button class="chip" data-tab="add" aria-pressed="true">+ Add a piece</button>
+          <button class="chip" data-tab="rack" aria-pressed="false">On the rack</button>
+          <button class="chip" data-tab="pending" aria-pressed="false">Donations to review <span id="nPending"></span></button>
           <button class="chip" data-tab="requests" aria-pressed="false">Requests</button>
           <button class="chip" data-tab="history" aria-pressed="false">Reviewed</button>
           <button class="chip" data-tab="workshops" aria-pressed="false">Workshop sign-ups</button>

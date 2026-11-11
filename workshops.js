@@ -5,8 +5,8 @@ initLayout();
 
 // Edit your upcoming sessions here.
 const SESSIONS = [
-  "Session A — HKBU, date TBC",
-  "Session B — HKBU, date TBC",
+  "Session A — Hong Kong, date TBC",
+  "Session B — Hong Kong, date TBC",
   "Notify me when dates are announced"
 ];
 qs("#session").innerHTML = SESSIONS.map(s => `<option>${esc(s)}</option>`).join("");

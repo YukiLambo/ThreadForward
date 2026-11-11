@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { CATEGORIES, SIZES, CONDITIONS, CAMPUSES } from "./config.js";
+import { CATEGORIES, SIZES, CONDITIONS, HUBS } from "./config.js";
 import { initLayout, esc, qs, qsa, swingTag, toast } from "./ui.js";
 
 initLayout();
@@ -12,7 +12,7 @@ const opt = (arr, ph) => (ph ? `<option value="">${ph}</option>` : "") + arr.map
 qs("#category").innerHTML = opt(CATEGORIES, "Choose…");
 qs("#size").innerHTML = opt(SIZES, "Choose…");
 qs("#condition").innerHTML = opt(CONDITIONS, "Choose…");
-qs("#campus").innerHTML = opt(CAMPUSES);
+qs("#hub").innerHTML = opt(HUBS);
 
 // ── photos ──
 const drop = qs("#drop"), input = qs("#photos"), thumbs = qs("#thumbs");
@@ -74,7 +74,7 @@ form.addEventListener("submit", async e => {
     material: d.material.trim(), brand: d.brand.trim(), defects: d.defects.trim(),
     description: d.description.trim(), story: d.story.trim(),
     donorName: d.donorName.trim(), donorEmail: d.donorEmail.trim().toLowerCase(),
-    campus: d.campus, dropoff: d.dropoff, showDonorName: !!d.showDonorName,
+    hub: d.hub, dropoff: d.dropoff, showDonorName: !!d.showDonorName,
     selfDeclared: { washed: true, clean: true, allowedType: true }
   };
   const btn = qs("#submitBtn"), bar = qs("#progress");
@@ -85,8 +85,8 @@ form.addEventListener("submit", async e => {
       <div class="success">
         <p class="kicker">Submitted for review</p>
         <h2 class="display display--m" style="font-size:2.2rem">Thank you. It's in the queue.</h2>
-        ${swingTag({ passportId: res.passportId, title: data.title, size: data.size, campus: data.campus })}
-        <p>This is your piece's passport ID. We'll email <strong>${esc(data.donorEmail)}</strong> once it's been reviewed — usually within 3 days. ${data.dropoff.startsWith("I'll") ? `Bring it to the ${esc(data.campus)} booth with the ID written on a slip.` : "We'll arrange collection by email."}</p>
+        ${swingTag({ passportId: res.passportId, title: data.title, size: data.size })}
+        <p>This is your piece's passport ID. We'll email <strong>${esc(data.donorEmail)}</strong> once it's been reviewed — usually within 3 days. ${data.dropoff.startsWith("I'll") ? `Drop it off at ${esc(data.hub)} with this ID on a slip, and we'll attach its ThreadForward tag.` : "We'll arrange collection by email."}</p>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px">
           <a class="btn btn--ink" href="donate.html">Give another piece</a>
           <a class="btn" href="wardrobe.html">Browse the rack</a>

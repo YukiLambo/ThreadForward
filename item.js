@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { initLayout, esc, catLabel, condLabel, fmt, qs, qsa, param, toast, swingTag } from "./ui.js";
+import { initLayout, esc, catLabel, condLabel, fmt, qs, qsa, param, toast, swingTag, priceLabel } from "./ui.js";
 
 initLayout();
 
@@ -26,18 +26,19 @@ function render(l) {
     <div>
       <p class="kicker">${esc(catLabel(l.category))}</p>
       <h1 class="display display--m">${esc(l.title)}</h1>
+      <p class="price">${esc(priceLabel(l))}</p>
       ${l.description ? `<p class="lede" style="margin-top:18px">${esc(l.description)}</p>` : ""}
       <dl class="specs">
         <dt>Size</dt><dd>${esc(l.size)}</dd>
         <dt>Condition</dt><dd>${esc(condLabel(l.condition))}</dd>
         ${l.material ? `<dt>Fabric</dt><dd>${esc(l.material)}</dd>` : ""}
         ${l.brand ? `<dt>Brand</dt><dd>${esc(l.brand)}</dd>` : ""}
-        <dt>Collect at</dt><dd>${esc(l.campus)} booth</dd>
-        <dt>Price</dt><dd>Free · contributions optional</dd>
+        <dt>Pick-up</dt><dd>${esc(l.hub)}</dd>
+        <dt>Payment</dt><dd>Pay at pick-up</dd>
       </dl>
       ${statusLine}
       <div style="margin-top:44px">
-        <p class="kicker">Its passport</p>
+        <p class="kicker">Its digital passport</p>
         ${swingTag({ ...l, href: `passport.html?id=${encodeURIComponent(l.passportId)}` })}
         <p class="muted" style="font-size:.9rem;margin-top:12px">Choosing this over new saves an estimated ${fmt(l.impact?.waterL || 0)} L of water${l.donorDisplay ? `. Previously loved by ${esc(l.donorDisplay)}` : ""}.</p>
         ${l.story ? `<p class="serif-i" style="font-size:1.3rem;margin-top:10px">“${esc(l.story)}”</p>` : ""}

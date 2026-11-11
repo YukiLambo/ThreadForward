@@ -22,7 +22,11 @@ export const firebaseConfig = {
 
 export const FIREBASE_SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
-export const CAMPUSES = ["HKBU", "PolyU", "CityU", "HKU", "CUHK", "Community"];
+// Pick-up points shown on forms and items. Add cities as you grow.
+export const HUBS = ["Hong Kong Hub", "Pop-up Booth", "Ship to me"];
+
+// Prices are set by the team when a piece is listed.
+export const CURRENCY = "HK$";
 
 export const CATEGORIES = [
   { id: "tops",      label: "Tops & Tees" },

@@ -14,7 +14,7 @@
 <main>
   <section class="section">
     <div class="wrap">
-      <p><a class="link" href="wardrobe.html">Back to the rack</a></p>
+      <p><a class="link" href="wardrobe.html">Back to the drop</a></p>
       <div id="item" style="margin-top:24px"><div class="item"><div class="gallery__main skeleton"></div><div></div></div></div>
     </div>
   </section>
@@ -33,12 +33,12 @@
         </div>
         <div class="form-row">
           <div class="field"><label for="rRole">I am</label>
-            <select id="rRole" name="role"><option>HKBU student</option><option>HKBU staff</option><option>Student at another university</option><option>Community member</option></select></div>
+            <select id="rRole" name="role"><option>Student</option><option>Working professional</option><option>Creative</option><option>Something else</option></select></div>
           <div class="field"><label for="rPickup">Pick-up</label>
-            <select id="rPickup" name="pickup"><option>Booth — weekday lunchtime</option><option>Booth — weekday afternoon</option><option>Arrange by email</option></select></div>
+            <select id="rPickup" name="pickup"><option>Weekday lunchtime</option><option>Weekday afternoon</option><option>Arrange by email</option></select></div>
         </div>
         <div class="field"><label for="rMsg">Anything we should know? <span class="hint">(optional)</span></label><textarea id="rMsg" name="message" maxlength="500"></textarea></div>
-        <label class="check"><input type="checkbox" name="agree" required> I'll collect within 7 days, or cancel so someone else can have it.</label>
+        <label class="check"><input type="checkbox" name="agree" required> I'll collect and pay within 7 days, or cancel so someone else can have it.</label>
         <p class="error-text" id="reqErr"></p>
         <button class="btn btn--ink" type="submit">Reserve it</button>
       </form>
@@ -46,7 +46,7 @@
     <div id="reqDone" hidden class="success">
       <p class="kicker">Reserved</p>
       <h2 class="display display--m" style="font-size:2rem">It's yours to collect.</h2>
-      <p>We've held it for 7 days and will email you pick-up details. Bring your passport ID:</p>
+      <p>It's on hold for you for 7 days. We'll email pick-up details. Pay when you collect, and bring this passport ID:</p>
       <p class="mono" id="reqPid" style="font-size:1.1rem"></p>
       <a class="btn" href="wardrobe.html">Keep browsing</a>
     </div>

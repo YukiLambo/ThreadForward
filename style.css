@@ -445,3 +445,19 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .section--flame .kicker::before, .section--lime .kicker::before { background: var(--ink); }
 .section--lime .kicker::before { background: var(--clay); }
 .display .serif, .display .serif-i { margin-right: -.1em; }
+
+/* ── Scan passport button (from the original design) ── */
+.qr-icon { width: 18px; height: 18px; flex: none; }
+.nav__scan { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--ink); background: transparent; border-radius: 999px; padding: 9px 15px; cursor: pointer; font: 500 .72rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; transition: background .25s, color .25s; }
+.nav__scan:hover { background: var(--ink); color: var(--lime); }
+.nav__scan--dark { border-color: var(--paper); color: var(--paper); }
+.nav__scan--dark:hover { background: var(--paper); color: var(--ink); }
+@media (max-width: 960px) { .nav__right > .nav__scan { display: none; } }
+.qr-orb { width: clamp(64px, 5vw, 76px); aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--ink); background: var(--paper); display: grid; place-items: center; cursor: pointer; transition: background .3s, color .3s, transform .4s var(--ease); }
+.qr-orb .qr-icon { width: 26px; height: 26px; }
+.qr-orb:hover { background: var(--ink); color: var(--clay); transform: rotate(-8deg) scale(1.05); }
+.hero__orbs { display: flex; align-items: center; gap: 14px; }
+.scan-box { max-width: 460px; }
+.scan-view { max-width: none; width: 100%; }
+.scan-msg { position: absolute; inset: auto 16px 16px; color: var(--white); font-size: .9rem; margin: 0; text-align: center; }
+.price { font: 600 clamp(1.8rem, 3vw, 2.4rem)/1 var(--f-display); letter-spacing: -0.04em; margin: 22px 0 0; }
