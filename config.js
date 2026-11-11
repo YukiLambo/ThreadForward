@@ -11,14 +11,27 @@
 //  works, but data is stored only in this browser (localStorage).
 // ─────────────────────────────────────────────────────────────
 
-export const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAm7pm91s5xlOcja4Y76oQ2TPCeHQMnBmc",
+  authDomain: "threadfoward.firebaseapp.com",
+  projectId: "threadfoward",
+  storageBucket: "threadfoward.firebasestorage.app",
+  messagingSenderId: "560035090352",
+  appId: "1:560035090352:web:0bab352a5f54cca4129075",
+  measurementId: "G-MCF1LPF2SF"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 export const FIREBASE_SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
