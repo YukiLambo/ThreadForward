@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23DFF75B'/><text x='50' y='70' font-size='60' text-anchor='middle' font-family='Arial Black'>T</text></svg>">
+  <title>Workshops — ThreadForward</title>
+</head>
+<body>
+<main>
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">Upcycling workshops</p>
+        <h1 class="display display--xl">Mend it.<br>Make it<br><span class="serif" style="color:var(--flame)">yours.</span></h1>
+        <p class="lede" style="margin-top:24px">A 90-minute session on what fast fashion costs — and a hands-on hour giving one of your own pieces a new life with embroidery or patches.</p>
+        <ol class="timeline" style="margin-top:40px">
+          <li><span class="n">1</span><div><h3>Understand the problem</h3><p>Where clothes come from, where they end up, and what Hong Kong's 400 tonnes a day really looks like.</p></div></li>
+          <li><span class="n">2</span><div><h3>Learn a stitch or two</h3><p>Sashiko, running stitch and patch-setting. Materials provided; no experience needed.</p></div></li>
+          <li><span class="n">3</span><div><h3>Keep it or pass it on</h3><p>Take your redesigned piece home, or add it to the rack with its new story on the passport.</p></div></li>
+        </ol>
+        <p class="muted" style="margin-top:24px">Bring: one clean garment you'd like to refresh — a tee, shirt, denim or tote works well.</p>
+      </div>
+      <div class="panel" id="wsPanel">
+        <h2 class="display display--m" style="font-size:2rem;margin-bottom:20px">Save a seat</h2>
+        <form class="form" id="wsForm" novalidate>
+          <div class="field"><label for="session">Session</label><select id="session" name="session" required></select></div>
+          <div class="form-row">
+            <div class="field"><label for="wName">Name</label><input id="wName" name="name" required maxlength="100" autocomplete="name"></div>
+            <div class="field"><label for="wEmail">Email</label><input id="wEmail" name="email" type="email" required maxlength="200" autocomplete="email"></div>
+          </div>
+          <div class="field"><label for="wRole">I am</label>
+            <select id="wRole" name="role"><option>HKBU student</option><option>HKBU staff</option><option>Student at another university</option><option>Community member</option></select></div>
+          <div class="field"><label for="wItem">What will you bring? <span class="hint">(optional)</span></label><input id="wItem" name="item" maxlength="120" placeholder="Faded denim jacket"></div>
+          <p class="error-text" id="wsErr" role="alert"></p>
+          <button class="btn btn--ink" type="submit">Save my seat</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="workshops.js"></script>
+</body>
+</html>

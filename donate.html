@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23DFF75B'/><text x='50' y='70' font-size='60' text-anchor='middle' font-family='Arial Black'>T</text></svg>">
+  <title>Give clothes — ThreadForward</title>
+</head>
+<body>
+<main>
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">Give clothes</p>
+        <h1 class="display display--xl">Pass it<br><span class="serif">forward.</span></h1>
+        <p class="lede" style="margin-top:24px">Tell us about a piece you no longer wear. We check every submission for hygiene and quality before it goes on the rack.</p>
+        <ol class="timeline" style="margin-top:40px">
+          <li><span class="n">1</span><div><h3>Photos</h3><p>Front, back and the care label, in daylight.</p></div></li>
+          <li><span class="n">2</span><div><h3>Details</h3><p>Size, fabric, condition and anything that needs fixing.</p></div></li>
+          <li><span class="n">3</span><div><h3>Hygiene &amp; drop-off</h3><p>Confirm it's clean. We'll email you once it's reviewed — usually within 3 days.</p></div></li>
+        </ol>
+        <p class="muted" style="margin-top:28px;font-size:.92rem">We can't accept underwear, swimwear or socks. Items that don't pass review go to our partner NGO or textile recycling — nothing is binned.</p>
+      </div>
+
+      <div class="panel" id="donatePanel">
+        <div class="stepper" aria-hidden="true"><span data-s="0" class="on">Photos</span><span data-s="1">Details</span><span data-s="2">Hygiene</span></div>
+        <form class="form" id="donateForm" novalidate>
+          <!-- STEP 1 -->
+          <div class="form-step on" data-step="0">
+            <div class="field">
+              <label for="photos">Photos <span class="hint">— 2 to 6 images. Front, back and label work best.</span></label>
+              <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
+                <input type="file" id="photos" accept="image/*" multiple>
+                <strong>Drop photos here or tap to add</strong>
+                <span class="muted" id="dropHint">On a phone you can use your camera.</span>
+              </div>
+              <div class="thumbs" id="thumbs"></div>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="form-step" data-step="1">
+            <div class="field"><label for="title">What is it?</label><input id="title" name="title" required maxlength="120" placeholder="e.g. Navy wool overshirt"></div>
+            <div class="form-row">
+              <div class="field"><label for="category">Category</label><select id="category" name="category" required></select></div>
+              <div class="field"><label for="size">Size</label><select id="size" name="size" required></select></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label for="condition">Condition</label><select id="condition" name="condition" required></select></div>
+              <div class="field"><label for="material">Fabric <span class="hint">(from the label)</span></label><input id="material" name="material" maxlength="80" placeholder="e.g. 100% cotton"></div>
+            </div>
+            <div class="field"><label for="brand">Brand <span class="hint">(optional)</span></label><input id="brand" name="brand" maxlength="60"></div>
+            <div class="field"><label for="defects">Any flaws? <span class="hint">Loose button, small hole, faded patch…</span></label><input id="defects" name="defects" maxlength="200" placeholder="None"></div>
+            <div class="field"><label for="description">Describe it for the next owner</label><textarea id="description" name="description" maxlength="400" placeholder="Fit, feel, how you wore it."></textarea></div>
+            <div class="field"><label for="story">Its story <span class="hint">(optional, shown on the passport)</span></label><input id="story" name="story" maxlength="160" placeholder="Bought at a Sham Shui Po market in 2023."></div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="form-step" data-step="2">
+            <fieldset class="field">
+              <legend>Hygiene check</legend>
+              <label class="check"><input type="checkbox" name="h_washed" required> It has been washed since it was last worn.</label>
+              <label class="check"><input type="checkbox" name="h_clean" required> No stains, odours, mould or pests that I know of.</label>
+              <label class="check"><input type="checkbox" name="h_type" required> It isn't underwear, swimwear or socks.</label>
+            </fieldset>
+            <div class="form-row">
+              <div class="field"><label for="donorName">Your name</label><input id="donorName" name="donorName" required maxlength="100" autocomplete="name"></div>
+              <div class="field"><label for="donorEmail">Email</label><input id="donorEmail" name="donorEmail" type="email" required maxlength="200" autocomplete="email"></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label for="campus">Drop-off point</label><select id="campus" name="campus" required></select></div>
+              <div class="field"><label for="dropoff">How will it reach us?</label>
+                <select id="dropoff" name="dropoff"><option>I'll bring it to the booth</option><option>Collect from my hall / office</option></select></div>
+            </div>
+            <label class="check"><input type="checkbox" name="showDonorName"> Show my first name on the item's passport.</label>
+          </div>
+
+          <p class="error-text" id="formErr" role="alert"></p>
+          <div class="progress" id="progress" hidden><div></div></div>
+          <div class="form-nav">
+            <button type="button" class="btn" id="backBtn" hidden>Back</button>
+            <button type="button" class="btn btn--ink" id="nextBtn" style="margin-left:auto">Continue</button>
+            <button type="submit" class="btn btn--lime" id="submitBtn" hidden style="margin-left:auto">Submit for review</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="donate.js"></script>
+</body>
+</html>

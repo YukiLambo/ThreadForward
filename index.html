@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23DFF75B'/><text x='50' y='70' font-size='60' text-anchor='middle' font-family='Arial Black'>T</text></svg>">
+  <title>ThreadForward — Good style goes on</title>
+  <meta name="description" content="A circular wardrobe for HKBU and the local community. Give clothes you don't wear, take pieces you will — free.">
+</head>
+<body>
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__copy">
+      <p class="kicker fade-in">A new cycle for pre-loved clothes · HKBU</p>
+      <div>
+        <h1 class="display hero__title reveal" aria-label="Good style goes on.">
+          <span><span>Good style</span></span>
+          <span><span>goes <em class="serif">on</em>.</span></span>
+        </h1>
+        <div class="hero__foot fade-in" style="margin-top:clamp(28px,4vw,56px)">
+          <div>
+            <p class="lede">Give the clothes you don't wear. Take the pieces you will. Every garment is hygiene-checked, gets a digital passport, and is free for students and staff.</p>
+            <div class="hero__actions">
+              <a class="btn btn--ink" href="donate.html">Give clothes</a>
+              <a class="btn" href="passport.html">Scan a passport</a>
+            </div>
+          </div>
+          <a class="orb" href="wardrobe.html">Shop<br>the rack<span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="hero__media">
+      <img src="hero.jpg" alt="A shopper looking through a rail of second-hand jeans and shirts">
+      <div class="hero__labels label"><span>New on the rack</span><span id="heroEdition">Edition 11 / 26</span></div>
+      <div class="sticker" aria-hidden="true">
+        <svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
+          <text><textPath href="#circ">Wear it again ✺ Pass it on ✺ Wear it again ✺</textPath></text></svg>
+        <b>✺</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
+
+  <!-- LOOKBOOK -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Freshly found · on the rack now</p>
+          <h2 class="display display--l">The good<br>stuff.</h2>
+        </div>
+        <div>
+          <p class="lede" style="margin-bottom:24px">Singular finds for singular people. Hand-checked, hygiene-approved and free to take home.</p>
+          <a class="textlink" href="wardrobe.html">See the full rack</a>
+        </div>
+      </div>
+      <div class="rack rack--lookbook" id="latest"></div>
+    </div>
+  </section>
+
+  <!-- PATHS -->
+  <nav class="paths" aria-label="Get started">
+    <a class="path" href="donate.html">
+      <h2 class="path__title">I have<br>clothes to give</h2>
+      <p>Upload photos and a few details. We review every piece and give it a passport.</p>
+      <span class="path__go">Start a donation</span>
+    </a>
+    <a class="path" href="wardrobe.html">
+      <h2 class="path__title">I'm looking<br>for something</h2>
+      <p>Browse checked, ready-to-wear pieces. Reserve one and pick it up on campus.</p>
+      <span class="path__go">Shop the rack</span>
+    </a>
+    <a class="path" href="mission.html">
+      <h2 class="path__title">Why this<br>matters</h2>
+      <p>Hong Kong sends about 400 tonnes of textiles to landfill every day. Here's our answer.</p>
+      <span class="path__go">Read our mission</span>
+    </a>
+  </nav>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" style="border-top:0">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">How it works</p>
+          <h2 class="display display--l">Wardrobe to<br><span class="serif">wardrobe.</span></h2>
+        </div>
+        <p class="lede">Four steps, about a week, zero landfill.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step__n">1</div><h3>Upload</h3><p>Photograph the front, back and label. Tell us size, fabric and any flaws.</p></div>
+        <div class="step"><div class="step__n">2</div><h3>Review</h3><p>AI flags obvious issues; our team completes a hygiene checklist before anything goes live.</p></div>
+        <div class="step"><div class="step__n">3</div><h3>Passport</h3><p>Approved pieces get a passport ID and appear on the rack with their story.</p></div>
+        <div class="step"><div class="step__n">4</div><h3>Pick up</h3><p>Someone reserves it and collects it at the booth. Free — contributions optional.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="section section--lime">
+    <div class="wrap manifesto">
+      <div class="manifesto__body">
+        <p class="kicker">Why we exist</p>
+        <h2 class="display display--l">Fashion has<br>a future.<br><span class="serif">We're wearing it.</span></h2>
+        <p class="lede">The most sustainable piece is the one that already exists. We rescue good clothing from the bin and put it back where it belongs — in wardrobes, on dance floors, out in the world.</p>
+        <a class="textlink" href="mission.html">Read our mission &amp; SDGs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASSPORT FEATURE -->
+  <section class="figure-band">
+    <div class="figure-band__img"><img src="look-03.jpg" alt="A rail of colourful second-hand shirts" loading="lazy"></div>
+    <div class="figure-band__copy">
+      <div>
+        <p class="kicker">The garment passport</p>
+        <h2 class="display display--m">Every piece<br>has a <span class="serif">past.</span></h2>
+        <p class="lede" style="margin-top:24px">Each item carries a QR tag. Scan it to see where it's been, who loved it before, and the water and waste saved by wearing it again.</p>
+      </div>
+      <div style="display:flex;gap:24px;align-items:end;flex-wrap:wrap;justify-content:space-between">
+        <div id="passportTag"></div>
+        <a class="btn btn--ink" href="passport.html">Check a passport</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section class="section" id="impact" style="border-top:0">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker">Our impact so far</p>
+        <h2 class="display display--l" style="text-align:right">Small choices.<br><span class="serif">Real change.</span></h2>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat__n" id="sListed">—</div><div class="stat__l">Pieces passed forward</div></div>
+        <div class="stat"><div class="stat__n" id="sKg">—</div><div class="stat__l">Kg of textiles kept from landfill</div></div>
+        <div class="stat"><div class="stat__n" id="sWater">—</div><div class="stat__l">Litres of water not spent on new clothes</div></div>
+      </div>
+      <p class="footnote">Estimated per category for rehomed pieces against producing an equivalent new garment. <a href="mission.html#impact" style="color:inherit">How we count</a>.</p>
+    </div>
+  </section>
+
+  <!-- WORKSHOP -->
+  <section class="figure-band" style="border-top:1px solid var(--rule)">
+    <div class="figure-band__copy" style="border-left:0">
+      <div>
+        <p class="kicker">Upcycling workshops</p>
+        <h2 class="display display--m">Bring a piece.<br>Leave with a <span class="serif">new one.</span></h2>
+        <p class="lede" style="margin-top:24px">Learn what fast fashion really costs, then rework something you own with embroidery or patches. Keep it, or put it on the rack.</p>
+      </div>
+      <a class="btn btn--flame" href="workshops.html" style="align-self:flex-start">Save a seat</a>
+    </div>
+    <div class="figure-band__img" style="border-left:1px solid var(--rule)"><img src="look-02.jpg" alt="A model in a reworked mesh top with organza sleeves" loading="lazy"></div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="section section--flame">
+    <div class="wrap split" style="align-items:end">
+      <div>
+        <p class="kicker" style="--x:0">Keep the cycle moving</p>
+        <h2 class="display display--xl">Get first<br>dibs.</h2>
+      </div>
+      <div>
+        <p class="lede" style="margin-bottom:28px;max-width:40ch">New drops, booth dates and repair tips. No greenwashing — just the good stuff, occasionally.</p>
+        <form class="signup" data-newsletter>
+          <label class="sr-only" for="nl">Email address</label>
+          <input id="nl" type="email" required placeholder="Your email address" autocomplete="email">
+          <button type="submit" aria-label="Join the newsletter">→</button>
+        </form>
+        <p class="fineprint">By joining you agree to receive ThreadForward news. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<script type="module" src="home.js"></script>
+</body>
+</html>
