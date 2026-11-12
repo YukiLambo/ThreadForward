@@ -4,34 +4,23 @@
 //  1. Create a Firebase project (console.firebase.google.com)
 //  2. Add a Web App and paste its config below.
 //  3. Enable: Authentication → Anonymous + Email/Password,
-//     Firestore Database, Storage.
+//     and Firestore Database (photos are stored there, free plan).
 //  4. Deploy the rules in /firebase (see README).
 //
 //  While apiKey is empty the site runs in DEMO MODE: everything
 //  works, but data is stored only in this browser (localStorage).
 // ─────────────────────────────────────────────────────────────
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+// Only edit the values between the quotes. Don't paste Firebase's whole
+// snippet here: its "import … from 'firebase/app'" lines break the site.
+export const firebaseConfig = {
   apiKey: "AIzaSyAm7pm91s5xlOcja4Y76oQ2TPCeHQMnBmc",
   authDomain: "threadfoward.firebaseapp.com",
   projectId: "threadfoward",
   storageBucket: "threadfoward.firebasestorage.app",
   messagingSenderId: "560035090352",
-  appId: "1:560035090352:web:0bab352a5f54cca4129075",
-  measurementId: "G-MCF1LPF2SF"
+  appId: "1:560035090352:web:0bab352a5f54cca4129075"
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 export const FIREBASE_SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 

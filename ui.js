@@ -73,7 +73,7 @@ function footer() {
           <li><a href="mission.html">Mission &amp; SDGs</a></li>
           <li><a href="mission.html#impact">Impact</a></li>
           <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
-          <li><a href="admin.html">Team login</a></li></ul></div>
+          </ul></div>
       </div>
       <div class="footer__base"><span>© ${new Date().getFullYear()} ThreadForward</span><span>Built for a longer life.</span><span>Impact figures are estimates.</span></div>
     </div>
