@@ -8,6 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23DFF75B'/><text x='50' y='70' font-size='60' text-anchor='middle' font-family='Arial Black'>T</text></svg>">
+  <link rel="preconnect" href="https://thumb.wikimedia.org">
+  <script>
+    // Entrance animation: once per visit (add ?intro to replay), never with reduced motion.
+    // Starts downloading the archive covers right away, and a safety timer means the page can't stay covered.
+    try { if ((/[?&]intro\b/.test(location.search) || !sessionStorage.getItem("tf_intro_seen")) && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("intro");
+      setTimeout(function () { document.documentElement.classList.remove("intro"); }, 8000);
+      var W = "https://thumb.wikimedia.org/wikipedia/commons/thumb/";
+      window.__tfCovers = ["e/e1/Vogue_cover%2C_November_1st%2C_1912%2C_by_Helen_Dryden.jpg","b/b2/VogueMagazine1Dec1912.jpg","9/9d/Harper%27s_Bazar_June_1913_cover.jpg","f/f6/Harpers_Bazar_cover_December_1915_by_L.bakst.jpg","0/0a/Harper%27s_Bazar_-_cover_-_February_1916_George_Barbier.jpg","2/26/VogueMagazine1Jun1917.jpg","e/ec/VogueMagazine15Mar1919.jpg","6/64/Vogue_cover%2C_July_1st%2C_1919%2C_by_Helen_Dryden.jpg","4/42/Vogue_cover%2C_June_1st%2C_1920%2C_by_Helen_Dryden.jpg","7/7a/VogueMagazine15Jun1920.jpg","0/07/VogueMagazine15Dec1920.jpg","9/99/Harpers_Bazar_-_cover_-_February_1921_-_Ert%C3%A9.jpg","9/9a/Ert%C3%A9_Harpers_Bazar_cover_Feb_1922.jpg","7/73/VogueMagazine1Apr1924.jpg","2/21/VogueMagazine1Jul1924.jpg","0/00/VogueMagazine15Sep1924.jpg","3/33/VogueMagazine1Jan1926.jpg","3/30/VogueMagazine15May1926.jpg","3/32/VogueMagazine15Jul1926.jpg","7/70/VogueMagazine1Oct1926.jpg"].map(function (p) {
+        var src = W + p + "/330px-" + p.split("/").pop(); (new Image()).src = src; return src;
+      });
+    } } catch (e) {}
+  </script>
   <title>ThreadForward — Good style goes on</title>
   <meta name="description" content="ThreadForward finds exceptional pre-loved clothing, extends its story, and makes circular fashion feel like the only fashion worth wearing.">
 </head>
@@ -183,6 +196,7 @@
     </div>
   </section>
 </main>
+<script type="module" src="intro.js"></script>
 <script type="module" src="home.js"></script>
 </body>
 </html>

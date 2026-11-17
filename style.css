@@ -548,3 +548,39 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 /* the rail runs edge to edge; its caption stays centred */
 .rail-wrap .rail { margin-inline: calc(50% - 50vw); }
 .rail-wrap .rail__floor { margin-inline: var(--gutter); }
+
+/* ── Entrance: a quick loop through the fashion archive ───── */
+html.intro { overflow: hidden; }
+html.intro::before { content: ""; position: fixed; inset: 0; background: var(--paper); z-index: 9998; }
+html.intro .reveal > span > span, html.intro .fade-in, html.intro .hero__media img { animation-play-state: paused; }
+.intro-overlay {
+  position: fixed; inset: 0; z-index: 9999; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 45%, #F6F2E8 0%, var(--paper) 60%, #E4DED0 100%);
+  transition: opacity .4s var(--ease);
+  --cw: clamp(84px, 12.5vw, 200px);
+}
+.intro-overlay.is-out { opacity: 0; pointer-events: none; }
+.intro-scene { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 45%; }
+.intro-stage { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; will-change: transform; }
+.intro-card {
+  position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 3/4.1;
+  margin: calc(var(--cw) * -0.68) 0 0 calc(var(--cw) * -0.5);
+  transform-style: preserve-3d; will-change: transform; --o: 0; --blur: 0px;
+}
+.intro-card img {
+  position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 3px; object-fit: cover; display: block;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; opacity: var(--o);
+  filter: blur(var(--blur)); outline: 1px solid rgba(60,40,10,.14); outline-offset: -1px; background: #E8DDC6;
+}
+.intro-card img.b { transform: rotateY(180deg); } /* another cover on the back of each page */
+.intro-label {
+  position: absolute; left: 0; right: 0; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); margin: 0; text-align: center; padding: 0 16px;
+  font: 500 .66rem/1.4 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft);
+}
+.intro-skip {
+  position: absolute; z-index: 4; right: calc(18px + env(safe-area-inset-right, 0px)); top: calc(18px + env(safe-area-inset-top, 0px));
+  border: 1px solid var(--ink); background: transparent; border-radius: 999px; padding: 9px 14px; cursor: pointer;
+  font: 500 .66rem/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase;
+}
+.intro-skip:hover { background: var(--ink); color: var(--paper); }
+@media (prefers-reduced-motion: reduce) { .intro-overlay { display: none; } }

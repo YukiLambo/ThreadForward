@@ -1,13 +1,16 @@
 // ThreadForward — entrance: a quick loop through the fashion archive.
-// Real vintage covers spin as a 3D ring, then split: half lift into a floating,
-// tilted mosaic, half fan out as a standing row, and the whole scene drifts
-// away to reveal the homepage. ~2.3 seconds, once per visit, skippable, and it
-// never plays for visitors who prefer reduced motion.
+// Real vintage covers fly in and spin as a tight 3D barrel, then split: most lift
+// into a tilted, floating cloud across the top, the rest fan out as a big standing
+// row below. Then the scene drifts away and the homepage takes over.
+// ~2.9 seconds, once per visit (add ?intro to the address to replay), skippable,
+// and never shown to visitors who prefer reduced motion.
 //
-// Covers: Vogue and Harper's Bazar, 1912–1926. Published before 1929, so they
-// are in the public domain in the US. Images served by Wikimedia Commons.
+// Covers: Vogue and Harper's Bazar, 1912–1926. Published before 1929, so they are
+// in the public domain in the US. Images are served by Wikimedia Commons.
+// index.html starts downloading them in <head> (window.__tfCovers); this list is
+// the fallback.
 const WM = "https://thumb.wikimedia.org/wikipedia/commons/thumb/";
-const COVERS = [
+const FALLBACK = [
   "e/e1/Vogue_cover%2C_November_1st%2C_1912%2C_by_Helen_Dryden.jpg",
   "b/b2/VogueMagazine1Dec1912.jpg",
   "9/9d/Harper%27s_Bazar_June_1913_cover.jpg",
@@ -29,6 +32,7 @@ const COVERS = [
   "3/32/VogueMagazine15Jul1926.jpg",
   "7/70/VogueMagazine1Oct1926.jpg"
 ].map(p => `${WM}${p}/330px-${p.split("/").pop()}`);
+const COVERS = (Array.isArray(window.__tfCovers) && window.__tfCovers.length) ? window.__tfCovers : FALLBACK;
 
 const root = document.documentElement;
 const finish = () => { root.classList.remove("intro"); try { sessionStorage.setItem("tf_intro_seen", "1"); } catch { /* ignore */ } };
@@ -37,17 +41,22 @@ const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const ease = t => 1 - Math.pow(1 - t, 3);
 const inOut = t => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const lerp = (a, b, t) => a + (b - a) * t;
+const rnd = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+const N = 40; // 20 covers, each used twice, spread around the barrel
+const isCloud = i => i % 5 !== 1 && i % 5 !== 3; // 24 go up into the cloud, 16 into the row
 
 async function start() {
+  const srcs = Array.from({ length: N }, (_, i) => COVERS[(i * 7) % COVERS.length]);
   const el = document.createElement("div");
   el.className = "intro-overlay";
   el.setAttribute("role", "presentation");
   el.innerHTML = `
     <div class="intro-scene"><div class="intro-stage">
-      ${COVERS.map(src => `<div class="intro-card"><img alt="" src="${src}" decoding="async"></div>`).join("")}
+      ${srcs.map((src, i) => `<div class="intro-card"><img alt="" src="${src}" decoding="async"><img class="b" alt="" src="${srcs[(i + 13) % N]}" decoding="async"></div>`).join("")}
     </div></div>
     <p class="intro-label">From the archive · Vogue &amp; Harper's Bazar, 1912–1926</p>
-    <button class="intro-skip" type="button">Skip →</button>`;
+    <button class="intro-skip" type="button">Skip</button>`;
   document.body.appendChild(el);
 
   let done = false;
@@ -60,69 +69,95 @@ async function start() {
   el.querySelector(".intro-skip").addEventListener("click", end);
   addEventListener("keydown", e => { if (e.key === "Escape") end(); }, { once: true });
 
-  // wait briefly for the first covers (never longer than ~0.8s)
+  // Wait for the covers (they started downloading in <head>), at most ~1.3s.
   const imgs = [...el.querySelectorAll("img")];
-  await Promise.race([
-    Promise.all(imgs.slice(0, 8).map(i => i.decode().catch(() => {}))),
-    new Promise(r => setTimeout(r, 800))
-  ]);
+  const settle = i => (i.complete ? Promise.resolve() : new Promise(r => { i.addEventListener("load", r, { once: true }); i.addEventListener("error", r, { once: true }); }));
+  await Promise.race([Promise.all(imgs.map(settle)), new Promise(r => setTimeout(r, 1300))]);
   if (done) return;
+  // Never show an empty card: reuse covers that did arrive. If almost none did, skip the intro.
+  const ready = [...new Set(imgs.filter(i => i.complete && i.naturalWidth > 0).map(i => i.src))];
+  if (ready.length < 4) { el.remove(); done = true; finish(); return; }
+  imgs.forEach((img, i) => { if (!(img.complete && img.naturalWidth > 0)) img.src = ready[i % ready.length]; });
 
   const stage = el.querySelector(".intro-stage");
   const cards = [...el.querySelectorAll(".intro-card")];
-  const N = cards.length;
-  const cw = cards[0].offsetWidth, ch = cards[0].offsetHeight;
-  const R = cw * 3.9; // leaves a little air between covers on the ring
-  const narrow = innerWidth < 640;
-  // scale the whole scene so the ring, and then the split layout, fit the screen
-  const fitRing = Math.min(1, (innerWidth * 0.94) / (2 * R + cw));
-  const fitSplit = Math.min(1, (innerWidth * 0.92) / (cw * 5.6));
-
-  // where each cover ends up: even covers → floating mosaic, odd → fanned row
-  const targets = cards.map((_, i) => {
-    if (i % 2 === 0) {
-      const k = i / 2, cols = 5, col = k % cols, row = Math.floor(k / cols);
-      return { x: (col - (cols - 1) / 2) * cw * 1.08, y: -ch * (narrow ? 0.9 : 0.75) + row * ch * 0.18, z: -row * ch * 0.95,
-        rx: 64, ry: -14 + col * 2, rz: -10 + row * 4 };
+  // Sizes are re-measured if the window changes (and never trusted when a browser reports 0).
+  let vw, vh, cw, ch, narrow, R, fitRing, fitSplit, targets;
+  const layout = () => {
+    vw = Math.max(innerWidth, root.clientWidth) || 1024;
+    vh = Math.max(innerHeight, root.clientHeight) || 768;
+    cw = cards[0].offsetWidth || Math.min(200, Math.max(84, vw * 0.125));
+    ch = cards[0].offsetHeight || cw * 1.37;
+    narrow = vw < 640;
+    // the barrel: covers stand edge-out round a central spine, like a book fanned all the way open
+    R = cw * 0.62;
+    fitRing = Math.min(1.35, (vw * 0.8) / (2 * (R + cw)), (vh * 0.5) / ch);
+    fitSplit = Math.min((vw * (narrow ? 1.25 : 1.1)) / (cw * 8), (vh * 0.92) / (ch * 2.45));
+    targets = makeTargets();
+  };
+  // Final layout, after the split
+  const makeTargets = () => { let ci = 0, ri = 0; return cards.map((_, i) => {
+    if (isCloud(i)) {
+      const k = ci++, r = Math.floor(k / 8), c = k % 8;
+      return {
+        x: (c - 3.5) * cw * 1.02 + (r - 1) * cw * 0.35 + (rnd(i) - 0.5) * cw * 0.3,
+        y: -ch * 0.62 - r * ch * 0.2 + (rnd(i + 9) - 0.5) * ch * 0.15,
+        z: -r * ch * 0.55 + (rnd(i + 3) - 0.5) * 40,
+        rx: 58 + (rnd(i + 5) - 0.5) * 16, ry: -16 + (rnd(i + 7) - 0.5) * 26, rz: (rnd(i + 11) - 0.5) * 28, s: 0.92
+      };
     }
-    const k = (i - 1) / 2;
-    return { x: (k - 4.5) * cw * 0.42, y: ch * (narrow ? 0.42 : 0.38), z: 0, rx: 0, ry: -64, rz: 0 };
-  });
+    const k = ri++;
+    return { x: (k - 7.5) * cw * 0.34 + cw * 0.15, y: ch * 0.38, z: -(15 - k) * cw * 0.05, rx: 0, ry: -66 + k * 1.2, rz: 0, s: 1.22 };
+  }); };
+  layout();
+  addEventListener("resize", layout);
 
-  el.classList.add("is-playing");
   const T0 = performance.now();
-  const SPIN = 1.05, SPLIT = 0.75, HOLD = 0.25, OUT = 0.35;
+  const ENTER = 0.4, SPIN = 1.25, SPLIT = 0.8, HOLD = 0.45, OUT = 0.4;
   const TOTAL = SPIN + SPLIT + HOLD + OUT;
+  const turns = cards.map(() => undefined);
 
   const frame = now => {
     if (done) return;
     const t = (now - T0) / 1000;
+    const enterP = ease(clamp(t / ENTER));
     const spinP = ease(clamp(t / SPIN));
-    const splitP = inOut(clamp((t - SPIN + 0.15) / SPLIT));
-    const outP = clamp((t - SPIN - SPLIT - HOLD) / OUT);
-    const ringTurn = -320 * spinP - 40 * clamp((t - SPIN) / 1);
-    // the camera looks slightly down on the ring, then settles
-    stage.style.transform = `translateY(${-outP * 60}px) rotateX(${lerp(-14, -8, splitP)}deg) scale(${lerp(0.82, 1, ease(clamp(t / 0.4))) * lerp(fitRing, fitSplit, splitP) * (1 + outP * 0.12)})`;
+    const splitP = clamp((t - SPIN + 0.1) / SPLIT);
+    const outP = ease(clamp((t - SPIN - SPLIT - HOLD) / OUT));
+    const spinSpeed = 3 * Math.pow(1 - clamp(t / SPIN), 2); // derivative of the ease
+    const ringTurn = -430 * spinP - 30 * clamp((t - SPIN) / 1.2);
+    const fit = lerp(fitRing, fitSplit, inOut(splitP));
+    const drift = Math.max(0, t - SPIN - SPLIT) * 10;
+    stage.style.transform = `translateY(${ch * 0.08 * fit - outP * 70}px) rotateX(${lerp(-7, -4, splitP)}deg) rotateY(${drift * 0.4}deg) scale(${fit * lerp(0.86, 1, enterP) * (1 + outP * 0.15)})`;
+
     cards.forEach((c, i) => {
       const a = (i / N) * 360 + ringTurn;
       const ar = (a * Math.PI) / 180;
-      const ring = { x: Math.sin(ar) * R, y: 0, z: Math.cos(ar) * R, ry: a };
+      // fly in from scattered spots across the screen into the barrel
+      const spread = 1 - enterP;
+      const ring = {
+        x: Math.sin(ar) * R + (rnd(i + 17) - 0.5) * (vw / fitRing) * 0.9 * spread,
+        y: (rnd(i + 21) - 0.5) * (vh / fitRing) * 0.8 * spread,
+        z: Math.cos(ar) * R - rnd(i + 23) * 600 * spread
+      };
       const tg = targets[i];
-      // take the short way round to the target angle (decided once, when the split begins)
-      if (c.turn === undefined && splitP > 0) c.turn = 360 * Math.round((a - tg.ry) / 360);
-      const ry0 = a - (c.turn || 0);
-      const p = clamp(splitP * 1.15 - (i % 2 ? 0.08 : 0) - (i / N) * 0.12);
+      // each card leaves the barrel at its own moment, cloud cards first
+      const p = clamp(splitP * 1.35 - (isCloud(i) ? 0 : 0.12) - rnd(i + 2) * 0.22);
       const e = inOut(p);
-      const x = lerp(ring.x, tg.x, e), y = lerp(ring.y, tg.y, e) - Math.sin(Math.PI * e) * 40 * (i % 2 ? -0.3 : 1);
-      const z = lerp(ring.z, tg.z, e), rx = lerp(0, tg.rx, e), ry = lerp(ry0, tg.ry, e), rz = lerp(0, tg.rz, e);
-      // a little wave across the floating mosaic, like paper in a breeze
-      const wave = i % 2 === 0 ? Math.sin(t * 5 + i) * 4 * e : 0;
-      c.style.transform = `translate3d(${x}px, ${y + wave}px, ${z}px) rotateY(${ry}deg) rotateX(${rx}deg) rotateZ(${rz}deg)`;
-      const speed = (1 - spinP) * 1.2 + Math.sin(Math.PI * e) * 0.9;
-      c.style.setProperty("--blur", speed > 0.15 ? `${Math.min(2.4, speed * 1.6).toFixed(2)}px` : "0px");
-      c.style.setProperty("--o", String(clamp(t / 0.25) * (1 - outP)));
+      const pageA = a + 90 + rnd(i + 29) * 140 * spread; // each page faces out from the spine
+      if (turns[i] === undefined && p > 0) turns[i] = 360 * Math.round((pageA - tg.ry) / 360);
+      const ry0 = pageA - (turns[i] || 0);
+      const lift = Math.sin(Math.PI * e) * ch * (isCloud(i) ? 0.35 : -0.08);
+      const x = lerp(ring.x, tg.x, e), y = lerp(ring.y, tg.y, e) - lift, z = lerp(ring.z, tg.z, e);
+      const rx = lerp(0, tg.rx, e), ry = lerp(ry0, tg.ry, e), rz = lerp(0, tg.rz, e), s = lerp(1, tg.s, e);
+      const flutter = isCloud(i) ? Math.sin(t * 4 + i) * 3 * e : 0; // paper in a breeze
+      c.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + flutter).toFixed(1)}px, ${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg) rotateX(${(rx + flutter).toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg) scale(${s.toFixed(3)})`;
+      const speed = spinSpeed * 0.9 + Math.sin(Math.PI * e) * 0.9;
+      const blur = speed > 0.2 ? Math.min(narrow ? 1.6 : 3, speed * 1.3) : 0;
+      c.style.setProperty("--blur", `${blur.toFixed(1)}px`);
+      c.style.setProperty("--o", String(clamp(t / 0.2) * (1 - outP)));
     });
-    if (t >= TOTAL) return end();
+    if (t >= TOTAL) { removeEventListener("resize", layout); return end(); }
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
