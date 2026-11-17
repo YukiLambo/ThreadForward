@@ -30,8 +30,15 @@
         <select id="fHub"><option value="">Any pick-up point</option></select>
         <label class="check" style="margin:0 0 0 6px"><input type="checkbox" id="fClaimed"> Show rehomed</label>
       </div>
-      <p class="muted" id="count" aria-live="polite"></p>
-      <div class="rack" id="rack"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px">
+        <p class="muted" id="count" aria-live="polite" style="margin:0"></p>
+        <div class="view-toggle" role="group" aria-label="View">
+          <button type="button" data-view="rail" aria-pressed="true">Rail</button>
+          <button type="button" data-view="grid" aria-pressed="false">Grid</button>
+        </div>
+      </div>
+      <div id="railView" class="rail-wrap"></div>
+      <div class="rack" id="rack" hidden></div>
     </div>
   </section>
 </main>

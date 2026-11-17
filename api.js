@@ -14,6 +14,7 @@
 //   admins/{uid}      private  — presence = admin rights
 // ─────────────────────────────────────────────────────────────
 import { firebaseConfig, FIREBASE_SDK, IMPACT } from "./config.js";
+import { DEMO_GARMENTS as G } from "./demo-garments.js";
 
 export const MODE = firebaseConfig.apiKey ? "firebase" : "demo";
 
@@ -82,11 +83,14 @@ function publicListingFrom(sub) {
 // ═════════════════════════════════════════════════════════════
 //  DEMO BACKEND (localStorage) — used until Firebase is configured
 // ═════════════════════════════════════════════════════════════
-const DEMO_KEY = "tf_demo_v5";
+const DEMO_KEY = "tf_demo_v6";
 const SEED = [
-  { id: "seed-1", passportId: "TF-2026-RC0842", title: "Rust corduroy blazer", category: "outerwear", size: "M", condition: "great", material: "Cotton corduroy", brand: "Vintage, unbranded", description: "Oversized, soft wale, sits beautifully over a printed shirt. Light wear on the cuffs.", story: "Found at a Sham Shui Po stall, worn to every gallery opening.", photos: ["look-01.jpg"], hub: "Hong Kong Hub", price: 180, donorDisplay: "Alex", status: "available" },
-  { id: "seed-2", passportId: "TF-2026-MO0193", title: "Mesh tee with organza sleeves", category: "tops", size: "S", condition: "like-new", material: "Polyester mesh, organza", brand: "", description: "A statement layer. Worn once to a showcase.", story: "", photos: ["look-02.jpg"], hub: "Pop-up Booth", price: 120, donorDisplay: "", status: "available" },
-  { id: "seed-3", passportId: "TF-2026-ES0411", title: "Everyday shirt bundle", category: "shirts", size: "L", condition: "good", material: "Cotton, linen", brand: "Mixed", description: "Five easy shirts in warm tones. Take one or take them all.", story: "", photos: ["look-03.jpg"], hub: "Hong Kong Hub", price: 60, donorDisplay: "", status: "available" },
+  { id: "seed-1", passportId: "TF-2026-RC0842", title: "Rust corduroy blazer", category: "outerwear", size: "M", condition: "great", material: "Cotton corduroy", brand: "Vintage, unbranded", description: "Oversized, soft wale, sits beautifully over a printed shirt. Light wear on the cuffs.", story: "Found at a Sham Shui Po stall, worn to every gallery opening.", photos: ["look-01.jpg"], cutout: G.blazer, hub: "Hong Kong Hub", price: 180, donorDisplay: "Alex", status: "available" },
+  { id: "seed-2", passportId: "TF-2026-MO0193", title: "Mesh tee with organza sleeves", category: "tops", size: "S", condition: "like-new", material: "Polyester mesh, organza", brand: "", description: "A statement layer. Worn once to a showcase.", story: "", photos: ["look-02.jpg"], cutout: G.meshTee, hub: "Pop-up Booth", price: 120, donorDisplay: "", status: "available" },
+  { id: "seed-3", passportId: "TF-2026-ES0411", title: "Striped cotton shirt", category: "shirts", size: "L", condition: "good", material: "Cotton", brand: "", description: "Easy boxy shirt in warm stripes.", story: "", photos: ["look-03.jpg"], cutout: G.shirt, hub: "Hong Kong Hub", price: 60, donorDisplay: "", status: "available" },
+  { id: "seed-5", passportId: "TF-2026-KN2207", title: "Cream rib-knit sweater", category: "knitwear", size: "M", condition: "great", material: "Wool blend", brand: "", description: "Chunky rib, slightly cropped. Cosy without the bulk.", story: "", photos: [G.knit], cutout: G.knit, hub: "Hong Kong Hub", price: 140, donorDisplay: "", status: "available" },
+  { id: "seed-6", passportId: "TF-2026-DJ5310", title: "Classic denim jacket", category: "denim", size: "M", condition: "great", material: "Cotton denim", brand: "", description: "Mid-wash trucker jacket with contrast stitching.", story: "Swapped at our first pop-up.", photos: [G.denim], cutout: G.denim, hub: "Pop-up Booth", price: 200, donorDisplay: "Kit", status: "available" },
+  { id: "seed-7", passportId: "TF-2026-SD8801", title: "Olive slip dress", category: "dresses", size: "S", condition: "like-new", material: "Viscose", brand: "", description: "Bias-cut midi with thin straps. Layers over a tee.", story: "", photos: [G.dress], cutout: G.dress, hub: "Hong Kong Hub", price: 110, donorDisplay: "", status: "available" },
   { id: "seed-4", passportId: "TF-2026-PW0107", title: "Paisley wide-leg jeans", category: "denim", size: "M", condition: "great", material: "Cotton denim", brand: "", description: "Relaxed fit with an all-over paisley print.", story: "First piece ever rehomed through ThreadForward.", photos: ["hero.jpg"], hub: "Hong Kong Hub", price: 150, donorDisplay: "Sam", status: "claimed" }
 ].map(x => ({ ...x, impact: impactFor(x.category), approvedAt: Date.now() - 86400000 }));
 
@@ -175,13 +179,13 @@ const demo = {
     const s = dLoad().submissions;
     return status ? s.filter(x => x.status === status) : s;
   },
-  async reviewSubmission(id, { decision, checklist, notes, price }) {
+  async reviewSubmission(id, { decision, checklist, notes, price, cutout }) {
     const db = dLoad();
     const sub = db.submissions.find(s => s.id === id);
     if (!sub) throw new Error("Submission not found");
     if (price != null) sub.price = price;
     sub.status = decision; sub.checklist = checklist; sub.reviewNotes = notes; sub.reviewedAt = Date.now();
-    if (decision === "approved") db.listings.unshift({ ...publicListingFrom(sub), id, approvedAt: Date.now() });
+    if (decision === "approved") db.listings.unshift({ ...publicListingFrom(sub), cutout: cutout || "", id, approvedAt: Date.now() });
     dSave(db);
   },
   async addListing(data, files, onProgress = () => {}) {
@@ -192,7 +196,7 @@ const demo = {
     }
     const db = dLoad();
     const id = uid(), passportId = makePassportId();
-    db.listings.unshift({ ...publicListingFrom({ ...data, passportId, photos }), id, approvedAt: Date.now(), addedByTeam: true });
+    db.listings.unshift({ ...publicListingFrom({ ...data, passportId, photos }), cutout: data.cutout || "", id, approvedAt: Date.now(), addedByTeam: true });
     dSave(db);
     return { id, passportId };
   },
@@ -219,19 +223,25 @@ const demo = {
 };
 
 // ═════════════════════════════════════════════════════════════
-//  FIREBASE BACKEND
+//  FIREBASE BACKEND (free Spark plan — no Cloud Storage needed)
+//
+//  Photos are compressed in the browser and stored as Firestore
+//  documents, one photo per document:
+//    photos/{id}            public  — photos of listed pieces (team writes)
+//    submissionPhotos/{id}  private — donors' photos awaiting review
+//  Each listing also keeps a small `cover` thumbnail so the rack
+//  loads quickly without fetching every full-size photo.
 // ═════════════════════════════════════════════════════════════
 let _fb;
 async function fb() {
   if (_fb) return _fb;
-  const [appM, authM, fsM, stM] = await Promise.all([
+  const [appM, authM, fsM] = await Promise.all([
     import(`${FIREBASE_SDK}/firebase-app.js`),
     import(`${FIREBASE_SDK}/firebase-auth.js`),
-    import(`${FIREBASE_SDK}/firebase-firestore.js`),
-    import(`${FIREBASE_SDK}/firebase-storage.js`)
+    import(`${FIREBASE_SDK}/firebase-firestore.js`)
   ]);
   const app = appM.initializeApp(firebaseConfig);
-  _fb = { A: authM, F: fsM, S: stM, auth: authM.getAuth(app), db: fsM.getFirestore(app), st: stM.getStorage(app) };
+  _fb = { A: authM, F: fsM, auth: authM.getAuth(app), db: fsM.getFirestore(app) };
   return _fb;
 }
 async function ensureUser() {
@@ -243,28 +253,46 @@ async function ensureUser() {
 const snapList = s => s.docs.map(d => ({ id: d.id, ...d.data() }));
 const ts = v => (v && typeof v.toMillis === "function" ? v.toMillis() : v);
 
+// Compress until the photo fits comfortably inside one Firestore document (1 MiB cap).
+async function photoData(file, maxDim = 1280) {
+  for (const [dim, q] of [[maxDim, 0.8], [1100, 0.72], [900, 0.66], [720, 0.6]]) {
+    const url = await blobToDataURL(await compressImage(file, dim, q));
+    if (url.length < 850000) return url;
+  }
+  throw new Error("That photo is too large. Try a smaller one.");
+}
+const coverData = async file => blobToDataURL(await compressImage(file, 480, 0.68));
+
+// Listing as the pages expect it: `photos` = cover only (fast lists).
+const asCard = l => ({ ...l, approvedAt: ts(l.approvedAt), photos: l.cover ? [l.cover] : (l.photos || []) });
+
+async function loadPhotos(col, ids = []) {
+  const { F, db } = await fb();
+  const snaps = await Promise.all(ids.map(id => F.getDoc(F.doc(db, col, id)).catch(() => null)));
+  return snaps.filter(x => x && x.exists()).map(x => x.data().data);
+}
+
 const firebase = {
   async submitDonation(data, files, onProgress = () => {}) {
     const user = await ensureUser();
-    const { F, S, db, st } = await fb();
+    const { F, db } = await fb();
     const ref = F.doc(F.collection(db, "submissions"));
     const passportId = makePassportId();
-    const photos = [];
+    const photoIds = [];
     for (let i = 0; i < files.length; i++) {
-      const blob = await compressImage(files[i]);
-      const r = S.ref(st, `submissions/${user.uid}/${ref.id}/${i}.jpg`);
-      await S.uploadBytes(r, blob, { contentType: "image/jpeg" });
-      photos.push(await S.getDownloadURL(r));
+      const pRef = F.doc(F.collection(db, "submissionPhotos"));
+      await F.setDoc(pRef, { data: await photoData(files[i]), ownerUid: user.uid, submissionId: ref.id });
+      photoIds.push(pRef.id);
       onProgress((i + 1) / files.length);
     }
-    await F.setDoc(ref, { ...data, passportId, photos, status: "pending", ownerUid: user.uid, createdAt: F.serverTimestamp() });
+    await F.setDoc(ref, { ...data, passportId, photoIds, cover: await coverData(files[0]), status: "pending", ownerUid: user.uid, createdAt: F.serverTimestamp() });
     return { id: ref.id, passportId };
   },
   async listListings({ category, size, hub, includeClaimed = false, limit } = {}) {
     const { F, db } = await fb();
-    const q = F.query(F.collection(db, "listings"), F.orderBy("approvedAt", "desc"), F.limit(200));
-    let items = snapList(await F.getDocs(q)).map(i => ({ ...i, approvedAt: ts(i.approvedAt) }));
-    // filter client-side → no composite indexes needed
+    const n = limit && !category && !size && !hub ? limit + 10 : 300;
+    const q = F.query(F.collection(db, "listings"), F.orderBy("approvedAt", "desc"), F.limit(n));
+    let items = snapList(await F.getDocs(q)).map(asCard);
     if (!includeClaimed) items = items.filter(i => i.status !== "claimed");
     if (category) items = items.filter(i => i.category === category);
     if (size) items = items.filter(i => i.size === size);
@@ -274,13 +302,16 @@ const firebase = {
   async getListing(id) {
     const { F, db } = await fb();
     const s = await F.getDoc(F.doc(db, "listings", id));
-    return s.exists() ? { id: s.id, ...s.data() } : null;
+    if (!s.exists()) return null;
+    const l = { id: s.id, ...s.data() };
+    const full = await loadPhotos("photos", l.photoIds);
+    return { ...asCard(l), photos: full.length ? full : asCard(l).photos };
   },
   async findByPassport(pid) {
     const { F, db } = await fb();
     const q = F.query(F.collection(db, "listings"), F.where("passportId", "==", pid.trim().toUpperCase()), F.limit(1));
     const r = snapList(await F.getDocs(q));
-    return r[0] || null;
+    return r[0] ? asCard(r[0]) : null;
   },
   async requestItem(listingId, data) {
     await ensureUser();
@@ -333,30 +364,40 @@ const firebase = {
     const { F, db } = await fb();
     const base = F.collection(db, "submissions");
     const q = status ? F.query(base, F.where("status", "==", status)) : F.query(base, F.orderBy("createdAt", "desc"), F.limit(200));
-    return snapList(await F.getDocs(q)).map(s => ({ ...s, createdAt: ts(s.createdAt) })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const list = snapList(await F.getDocs(q)).map(s => ({ ...s, createdAt: ts(s.createdAt) })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    if (status !== "pending") return list.map(s => ({ ...s, photos: s.cover ? [s.cover] : [] }));
+    return Promise.all(list.map(async s => ({ ...s, photos: await loadPhotos("submissionPhotos", s.photoIds) })));
   },
-  async reviewSubmission(id, { decision, checklist, notes, price }) {
+  async reviewSubmission(id, { decision, checklist, notes, price, cutout }) {
     const { F, db, auth } = await fb();
     const sRef = F.doc(db, "submissions", id);
     const snap = await F.getDoc(sRef);
     if (!snap.exists()) throw new Error("Submission not found");
+    const sub = snap.data();
     const b = F.writeBatch(db);
     b.update(sRef, { status: decision, checklist, reviewNotes: notes, reviewedAt: F.serverTimestamp(), reviewedBy: auth.currentUser.uid });
-    if (decision === "approved") b.set(F.doc(db, "listings", id), { ...publicListingFrom({ ...snap.data(), price }), approvedAt: F.serverTimestamp() });
+    if (decision === "approved") {
+      // copy the donor's private photos into the public photo collection
+      for (const pid of sub.photoIds || []) {
+        const p = await F.getDoc(F.doc(db, "submissionPhotos", pid));
+        if (p.exists()) b.set(F.doc(db, "photos", pid), { data: p.data().data, listingId: id });
+      }
+      b.set(F.doc(db, "listings", id), { ...publicListingFrom({ ...sub, price, photos: [] }), cover: sub.cover || "", cutout: cutout || "", photoIds: sub.photoIds || [], approvedAt: F.serverTimestamp() });
+    }
     await b.commit();
   },
   async addListing(data, files, onProgress = () => {}) {
-    const { F, S, db, st } = await fb();
+    const { F, db } = await fb();
     const ref = F.doc(F.collection(db, "listings"));
     const passportId = makePassportId();
-    const photos = [];
+    const photoIds = [];
     for (let i = 0; i < files.length; i++) {
-      const r = S.ref(st, `listings/${ref.id}/${i}.jpg`);
-      await S.uploadBytes(r, await compressImage(files[i]), { contentType: "image/jpeg" });
-      photos.push(await S.getDownloadURL(r));
+      const pRef = F.doc(F.collection(db, "photos"));
+      await F.setDoc(pRef, { data: await photoData(files[i]), listingId: ref.id });
+      photoIds.push(pRef.id);
       onProgress((i + 1) / files.length);
     }
-    await F.setDoc(ref, { ...publicListingFrom({ ...data, passportId, photos }), approvedAt: F.serverTimestamp(), addedByTeam: true });
+    await F.setDoc(ref, { ...publicListingFrom({ ...data, passportId, photos: [] }), cover: await coverData(files[0]), cutout: data.cutout || "", photoIds, approvedAt: F.serverTimestamp(), addedByTeam: true });
     return { id: ref.id, passportId };
   },
   async updateListing(id, fields) {
@@ -365,7 +406,11 @@ const firebase = {
   },
   async removeListing(id) {
     const { F, db } = await fb();
-    await F.deleteDoc(F.doc(db, "listings", id));
+    const s = await F.getDoc(F.doc(db, "listings", id));
+    const b = F.writeBatch(db);
+    for (const pid of (s.exists() && s.data().photoIds) || []) b.delete(F.doc(db, "photos", pid));
+    b.delete(F.doc(db, "listings", id));
+    await b.commit();
   },
   async listRequests() {
     const { F, db } = await fb();
