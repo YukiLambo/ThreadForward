@@ -1,5 +1,5 @@
 import { api } from "./api.js";
-import { CATEGORIES, SIZES, CONDITIONS, HUBS } from "./config.js";
+import { CATEGORIES, SIZES, CONDITIONS, HUBS, NOTIFY_FORMSPREE_ID } from "./config.js";
 import { initLayout, esc, qs, qsa, swingTag, toast } from "./ui.js";
 
 initLayout();
@@ -81,6 +81,7 @@ form.addEventListener("submit", async e => {
   btn.disabled = true; btn.textContent = "Uploading photos…"; bar.hidden = false;
   try {
     const res = await api.submitDonation(data, files, p => { qs("div", bar).style.width = `${Math.round(p * 100)}%`; });
+    notifyTeam(data, res);
     qs("#donatePanel").innerHTML = `
       <div class="success">
         <p class="kicker">Submitted for review</p>
@@ -97,3 +98,32 @@ form.addEventListener("submit", async e => {
     btn.disabled = false; btn.textContent = "Submit for review"; bar.hidden = true;
   }
 });
+
+// Emails the team a short notice about a new submission (see NOTIFY_FORMSPREE_ID
+// in config.js). Runs in the background; any failure is ignored so the donor's
+// submission is never affected.
+function notifyTeam(data, res) {
+  if (!NOTIFY_FORMSPREE_ID) return;
+  const label = (arr, id) => arr.find(a => a.id === id)?.label || id;
+  try {
+    fetch(`https://formspree.io/f/${encodeURIComponent(NOTIFY_FORMSPREE_ID)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        _subject: `New donation: ${data.title} (${res.passportId})`,
+        "Passport ID": res.passportId,
+        Item: data.title,
+        Category: label(CATEGORIES, data.category),
+        Size: data.size,
+        Condition: label(CONDITIONS, data.condition),
+        Brand: data.brand || "—",
+        Defects: data.defects || "—",
+        Donor: data.donorName,
+        email: data.donorEmail,
+        Hub: data.hub,
+        "Drop-off": data.dropoff,
+        "Review it": new URL("admin.html", location.href).href
+      })
+    }).catch(() => {});
+  } catch {}
+}

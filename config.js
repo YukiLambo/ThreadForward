@@ -24,6 +24,16 @@ export const firebaseConfig = {
 
 export const FIREBASE_SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
+// ── Email me when someone submits a donation (optional) ──
+// Uses Formspree's free plan (formspree.io, 50 emails a month).
+//  1. Sign up at formspree.io with the email you want notices sent to.
+//  2. Click "+ New Form", name it e.g. "ThreadForward donations".
+//  3. Copy the form's ID: the part after /f/ in its endpoint,
+//     e.g. https://formspree.io/f/xyzabcde  →  "xyzabcde".
+//  4. Paste it between the quotes below and push the change.
+// Leave it empty to turn notices off. A failed email never blocks a donation.
+export const NOTIFY_FORMSPREE_ID = "";
+
 // Pick-up points shown on forms and items. Add cities as you grow.
 export const HUBS = ["Hong Kong Hub", "Pop-up Booth", "Ship to me"];
 
