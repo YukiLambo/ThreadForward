@@ -32,7 +32,7 @@ export const FIREBASE_SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 //     e.g. https://formspree.io/f/xyzabcde  →  "xyzabcde".
 //  4. Paste it between the quotes below and push the change.
 // Leave it empty to turn notices off. A failed email never blocks a donation.
-export const NOTIFY_FORMSPREE_ID = "";
+export const NOTIFY_FORMSPREE_ID = "xrpqdake";
 
 // Pick-up points shown on forms and items. Add cities as you grow.
 export const HUBS = ["Hong Kong Hub", "Pop-up Booth", "Ship to me"];
