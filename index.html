@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23DFF75B'/><text x='50' y='70' font-size='60' text-anchor='middle' font-family='Arial Black'>T</text></svg>">
   <link rel="preconnect" href="https://thumb.wikimedia.org">
@@ -24,24 +24,34 @@
   <title>ThreadForward — Good style goes on</title>
   <meta name="description" content="ThreadForward finds exceptional pre-loved clothing, extends its story, and makes circular fashion feel like the only fashion worth wearing.">
 </head>
-<body>
+<body class="mag">
 <main>
-  <!-- HERO -->
-  <section class="hero">
+  <!-- HERO: the cover story -->
+  <section class="hero mag-hero">
     <div class="hero__copy">
-      <p class="kicker fade-in">A new cycle for pre-loved clothes</p>
+      <p class="mag-folio fade-in"><span id="heroIssue">No. 11</span><span id="heroEdition">November 2026</span><span>Hong Kong · Free</span></p>
       <div>
+        <p class="kicker fade-in">The circular fashion issue</p>
         <h1 class="display hero__title reveal" aria-label="Good style goes on.">
           <span><span>Good style</span></span>
           <span><span>goes <em class="serif">on</em>.</span></span>
         </h1>
-        <div class="hero__foot fade-in" style="margin-top:clamp(28px,4vw,56px)">
-          <div>
-            <p class="lede">We find exceptional vintage, extend its story, and make circular fashion feel like the only fashion worth wearing.</p>
-            <div class="hero__actions">
-              <a class="btn btn--ink" href="donate.html">Give clothes</a>
-              <a class="btn" href="wardrobe.html">Shop the drop</a>
-            </div>
+        <p class="lede mag-dek fade-in">We find exceptional vintage, extend its story, and make circular fashion feel like the only fashion worth wearing.</p>
+      </div>
+      <div class="hero__foot fade-in">
+        <nav class="mag-contents" aria-label="In this issue">
+          <p class="label">In this issue</p>
+          <ol>
+            <li><a href="#latest-head"><b>04</b> The good stuff <i>this drop</i></a></li>
+            <li><a href="#how"><b>12</b> Wardrobe to wardrobe</a></li>
+            <li><a href="#passport"><b>18</b> Every piece has a past</a></li>
+            <li><a href="#workshop"><b>26</b> Bring a piece, leave with a new one</a></li>
+          </ol>
+        </nav>
+        <div>
+          <div class="hero__actions">
+            <a class="btn btn--ink" href="donate.html">Give clothes</a>
+            <a class="btn" href="wardrobe.html">Shop the drop</a>
           </div>
           <div class="hero__orbs">
             <button class="qr-orb" type="button" data-scan aria-label="Scan a garment passport"><span data-qr></span></button>
@@ -50,9 +60,62 @@
         </div>
       </div>
     </div>
-    <div class="hero__media">
-      <img src="hero.jpg" alt="A shopper looking through a rail of second-hand jeans and shirts">
-      <div class="hero__labels label"><span>New drop</span><span id="heroEdition">Edition 11 / 26</span></div>
+    <div class="hero__media mag-stage">
+      <p class="sr-only">A stack of ThreadForward magazine covers turning, one page at a time.</p>
+      <div class="mag-stack" data-mag-loop>
+          <article class="cover cover--a" aria-hidden="true">
+            <div class="cover__face cover__front">
+              <img src="look-01.jpg" alt="" loading="eager" decoding="async">
+              <div class="cover__ink">
+                <p class="cover__strip"><span>No. 11</span><span>Hong Kong</span><span>Free to read</span></p>
+                <p class="cover__mast">ThreadForward</p>
+                <p class="cover__head">The Re-Wear<br>Issue</p>
+                <ul class="cover__lines"><li>Corduroy, twice loved</li><li>Why old beats new</li><li>10 pieces, one rail</li></ul>
+                <span class="cover__code"></span>
+              </div>
+            </div>
+            <div class="cover__face cover__back"><span>ThreadForward · No. 11</span><p>The most sustainable piece is the one that already exists.</p><i>The archive edit</i></div>
+          </article>
+          <article class="cover cover--b" aria-hidden="true">
+            <div class="cover__face cover__front">
+              <img src="look-02.jpg" alt="" loading="eager" decoding="async">
+              <div class="cover__ink">
+                <p class="cover__strip"><span>No. 12</span><span>Hong Kong</span><span>Free to read</span></p>
+                <p class="cover__mast">ThreadForward</p>
+                <p class="cover__head">Bring a piece,<br><em>leave with a new one</em></p>
+                <ul class="cover__lines"><li>Patch it, stitch it</li><li>The organza fix</li><li>Seats this month</li></ul>
+                <span class="cover__code"></span>
+              </div>
+            </div>
+            <div class="cover__face cover__back"><span>ThreadForward · No. 12</span><p>The most sustainable piece is the one that already exists.</p><i>Workshop notes</i></div>
+          </article>
+          <article class="cover cover--c" aria-hidden="true">
+            <div class="cover__face cover__front">
+              <img src="hero.jpg" alt="" loading="eager" decoding="async">
+              <div class="cover__ink">
+                <p class="cover__strip"><span>No. 13</span><span>Hong Kong</span><span>Free to read</span></p>
+                <p class="cover__mast">ThreadForward</p>
+                <p class="cover__head">The <em>dig</em></p>
+                <ul class="cover__lines"><li>Inside the rail</li><li>Denim, second time round</li><li>400 tonnes a day</li></ul>
+                <span class="cover__code"></span>
+              </div>
+            </div>
+            <div class="cover__face cover__back"><span>ThreadForward · No. 13</span><p>The most sustainable piece is the one that already exists.</p><i>Field report</i></div>
+          </article>
+          <article class="cover cover--d" aria-hidden="true">
+            <div class="cover__face cover__front">
+              <img src="look-03.jpg" alt="" loading="eager" decoding="async">
+              <div class="cover__ink">
+                <p class="cover__strip"><span>No. 14</span><span>Hong Kong</span><span>Free to read</span></p>
+                <p class="cover__mast">ThreadForward</p>
+                <p class="cover__head">Every piece<br>has a <em>past</em></p>
+                <ul class="cover__lines"><li>Scan the tag</li><li>Where it’s been</li><li>Water you saved</li></ul>
+                <span class="cover__code"></span>
+              </div>
+            </div>
+            <div class="cover__face cover__back"><span>ThreadForward · No. 14</span><p>The most sustainable piece is the one that already exists.</p><i>The passport issue</i></div>
+          </article>
+      </div>
       <div class="sticker" aria-hidden="true">
         <svg viewBox="0 0 100 100"><defs><path id="circ" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
           <text><textPath href="#circ">Wear it again ✺ Pass it on ✺ Wear it again ✺</textPath></text></svg>
@@ -69,7 +132,7 @@
     <div class="wrap">
       <div class="section-head">
         <div>
-          <p class="kicker">Freshly found · this drop</p>
+          <p class="kicker" id="latest-head">Freshly found · this drop</p>
           <h2 class="display display--l">The good<br>stuff.</h2>
         </div>
         <div>
@@ -101,7 +164,7 @@
   </nav>
 
   <!-- HOW IT WORKS -->
-  <section class="section" style="border-top:0">
+  <section class="section" id="how" style="border-top:0">
     <div class="wrap">
       <div class="section-head">
         <div>
@@ -132,7 +195,7 @@
   </section>
 
   <!-- PASSPORT FEATURE -->
-  <section class="figure-band">
+  <section class="figure-band" id="passport">
     <div class="figure-band__img"><img src="look-03.jpg" alt="A rail of colourful second-hand shirts" loading="lazy"></div>
     <div class="figure-band__copy">
       <div>
@@ -164,7 +227,7 @@
   </section>
 
   <!-- WORKSHOP -->
-  <section class="figure-band" style="border-top:1px solid var(--rule)">
+  <section class="figure-band" id="workshop" style="border-top:1px solid var(--rule)">
     <div class="figure-band__copy" style="border-left:0">
       <div>
         <p class="kicker">Upcycling workshops</p>
@@ -198,5 +261,6 @@
 </main>
 <script type="module" src="intro.js"></script>
 <script type="module" src="home.js"></script>
+<script type="module" src="magazine.js"></script>
 </body>
 </html>
