@@ -11,8 +11,7 @@ const run = words.map(w => `<span>${w}</span><i>✺</i>`).join("");
 qs("#marquee").innerHTML = run + run;
 
 const d = new Date();
-qs("#heroEdition").textContent = d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
-qs("#heroIssue").textContent = `No. ${String(d.getMonth() + 1).padStart(2, "0")}`;
+qs("#heroEdition").textContent = `Edition ${String(d.getMonth() + 1).padStart(2, "0")} / ${String(d.getFullYear()).slice(2)}`;
 
 const latest = qs("#latest");
 latest.innerHTML = `<div class="rail-loading skeleton"></div>`;
