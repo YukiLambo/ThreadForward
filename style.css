@@ -585,46 +585,34 @@ html.intro .reveal > span > span, html.intro .fade-in, html.intro .hero__media i
 .intro-skip:hover { background: var(--ink); color: var(--paper); }
 @media (prefers-reduced-motion: reduce) { .intro-overlay { display: none; } }
 
-/* ── Vintage magazine edition (landing page: body.mag) ─────────
-   Didone masthead type, cream newsprint with grain, folios and cover lines,
-   and a looping stack of original ThreadForward covers in the hero. */
-.mag {
+/* ── Vintage magazine hero (landing page only: .mag-hero) ─────────
+   Didone type, cream newsprint with grain, a folio and contents list, and a
+   looping stack of original ThreadForward covers. Everything here is scoped to
+   the hero; the rest of the site keeps its own styles. */
+.mag-hero {
   --paper: #F1EADA;
-  --paper-2: #E7DDC8;
   --ink: #1C1712;
   --ink-soft: #5F564A;
   --rule: #1C1712;
   --clay: #B23A22;
-  --lime: #DCE07A;
   --white: #FBF7EE;
   --f-didone: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  position: relative; isolation: isolate; background: var(--paper); color: var(--ink);
 }
-/* paper grain + a soft vignette, over everything but never in the way */
-.mag::after {
-  content: ""; position: fixed; inset: 0; z-index: 9997; pointer-events: none;
+/* paper grain + a soft vignette over the hero */
+.mag-hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background:
     radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(84, 58, 24, .10)),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .16 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: multiply; opacity: .38;
 }
-.mag ::selection { background: var(--clay); color: var(--white); }
-
-/* Type: Didone display, italic accents, small caps labels */
-.mag .display { font-family: var(--f-didone); font-weight: 500; text-transform: none; letter-spacing: -0.035em; line-height: .9; font-variation-settings: "opsz" 96; }
-.mag .display .serif, .mag .display .serif-i, .mag .accent { font-family: var(--f-didone); font-style: italic; font-weight: 400; }
-.mag .display .serif { margin-right: 0; text-transform: none; }
+.mag-hero .display { font-family: var(--f-didone); font-weight: 500; text-transform: none; letter-spacing: -0.035em; line-height: .9; font-variation-settings: "opsz" 96; }
+.mag-hero .display .serif { font-family: var(--f-didone); font-style: italic; font-weight: 400; margin-right: 0; text-transform: none; }
+.mag-hero .lede { font-family: var(--f-didone); font-variation-settings: "opsz" 14; font-size: clamp(1.08rem, 1.3vw, 1.3rem); line-height: 1.45; }
+.mag-hero .kicker::before { border-radius: 0; width: 18px; height: 1px; background: currentColor; }
+.mag-hero .btn { border-radius: 0; }
 .mag-stage img { animation: none; }
-.mag .logo { font-family: var(--f-didone); font-weight: 700; text-transform: none; letter-spacing: -0.02em; font-size: 1.45rem; }
-.mag .logo i { font-family: var(--f-didone); font-style: italic; font-weight: 400; transform: none; letter-spacing: -0.02em; font-size: 1em; }
-.mag .lede { font-family: var(--f-didone); font-variation-settings: "opsz" 14; font-size: clamp(1.08rem, 1.3vw, 1.3rem); line-height: 1.45; }
-.mag .kicker::before { border-radius: 0; width: 18px; height: 1px; background: currentColor; }
-.mag .btn { border-radius: 0; }
-.mag .stat__n { font-family: var(--f-didone); font-weight: 500; letter-spacing: -0.04em; }
-.mag .path__title { font-family: var(--f-didone); font-weight: 500; text-transform: none; letter-spacing: -0.02em; }
-.mag .step__n { font-family: var(--f-didone); font-style: italic; }
-.mag .figure-band__img img, .mag .rack img { filter: sepia(.18) saturate(.9) contrast(1.04); }
-.mag .marquee { background: var(--ink); color: var(--paper); border-block: 3px double var(--paper); }
-.mag .marquee__track span { font-family: var(--f-didone); font-style: italic; font-weight: 400; text-transform: none; letter-spacing: -0.02em; }
 
 /* Hero, set like a cover story */
 .mag-hero .hero__copy { gap: clamp(28px, 4vw, 56px); }
@@ -696,6 +684,4 @@ html.intro .reveal > span > span, html.intro .fade-in, html.intro .hero__media i
   .mag-stage { order: -1; border-top: 0; border-bottom: 1px solid var(--rule); }
   .mag-stack { width: min(70vw, 380px); }
 }
-.mag .footer__mark { font-family: var(--f-didone); font-weight: 600; text-transform: none; letter-spacing: -0.04em; }
-.mag .footer__mark i { font-family: var(--f-didone); font-style: italic; font-weight: 400; transform: none; }
 @media (prefers-reduced-motion: reduce) { .cover.is-top .cover__front img { animation: none; } }
